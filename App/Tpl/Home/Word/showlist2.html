@@ -1,0 +1,29 @@
+<style>
+	.lists{width:120px;float:left;padding: 5px;box-shadow: 2px 2px 2px 2px #7D26CD;background: #1E90FF;color:black;font-weight:bold;margin:5px;font-family: Microsoft Yahei;}
+	.lists a{color: inherit;text-decoration: none;}
+</style>
+<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+<foreach name='lists' item='vo'>
+<div class="lists">
+	<a href="__ROOT__/index.php/Word/showvoc2/name/<{$vo}>/<{$libname}>" target='iframe2' class='select'><{$vo}></a>
+</div>
+</foreach>
+
+
+
+
+
+
+<input type="hidden" class='libname' value="<{$libname}>">
+
+<script>
+libname=$('.libname').val();
+$(function(){
+	///
+		$('.select').click(function(){
+			$(this).parent().siblings('div').css('background','#1E90FF');
+			$(this).parent().css('background','#FF3E96');
+		})
+})
+
+</script>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<style>
+a{text-decoration: none;color: black;}
+.qd{width:100px;height:50px;font-size:35px;color:green;}
+.qddes{color:red;font-family: Microsoft Yahei;font-weight: bold;display:none;}
+	</style>
+	<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+	<meta charset="UTF-8">
+	<title>个人信息</title>
+</head>
+<body>
+	<div style="width:1000px;margin:50px auto;">
+		<div style="width:1000px;height:30px;text-align:center;"><a href="__ROOT__/index.php">首页</a></div>
+		<div class="touxiang" style="width:500px;margin:50px auto;">
+			<img id="tx" src="__ROOT__/touxiang/<{$data.id}>" style="height:100px;width:100px;" alt="上传一个头像吧">
+			<input type="file" value="上传头像"name="touxiang" id="touxiang">
+			
+		</div>
+		<div class="mingzi" style="width:1000px;height:50px;text-align:center;">
+			<button class="qd">签到</button>                     <{$data.nickname}>&nbsp&nbsp(注册时间:<?php echo date('Y-m-d,H:i:s',$data['time']); ?>)
+			<p class="qddes" style="color:green">连续签到1~6天可获得10,30,60,100,150,210金币，7天及以上250金币</p>
+			<p class="qddes">您已连续签到<{$data.lianxu}>天，最长连续签到：<{$data.maxqd}>天</p>
+		</div>
+	</div>
+	<input type="hidden" id="root" value="__ROOT__">
+	<input type="hidden" id="lianxu" value="<{$data.lianxu}>">
+	<input type="hidden" id="nd" value="<{$data.nd}>">
+</body>
+<script>
+var root=$('#root').val();
+var ifqd=$('#ifqd').val();
+var lianxu=$('#lianxu').val();
+var nd=$('#nd').val();
+	$(function(){//ready 开始
+		/*-----*/
+		$('.qd').click(function(){
+			$.post('__ROOT__/index.php/Index/qiandao',{lianxu:lianxu,nd:nd},function(data){
+				if(data=='did'){
+					alert('今天已经签过到拉~明天再来呗');
+				}else{
+					var lx=parseInt(lianxu)+1;
+					if(data=='10'){lx=1;}
+					alert('已经连续'+lx+'天签到，获得了'+data+'金币');
+				}
+				location.reload(true);
+			})
+			
+		})
+		/*-----*/
+		if(ifqd==1){
+				$('.qd').css('color','gray');
+			}
+		/*-----*/
+
+		$('#touxiang').change(function(){
+			var img=document.getElementById('touxiang').files[0];
+			var fd=new FormData();
+			fd.append('img',img);
+			xhr=new XMLHttpRequest();
+			xhr.open('post',root+'/index.php/Index/changetouxiang');
+			xhr.send(fd);
+			xhr.onreadystatechange=function(){
+				if(xhr.readyState==4){
+					alert('上传成功');
+				}
+			}
+		})
+			/*-----*/
+			$('.qd').hover(function(){
+				$('.qddes').slideDown();
+			},function(){
+				$('.qddes').slideUp();
+			})
+			/*-----*/
+	})//ready结束
+</script>
+</html>

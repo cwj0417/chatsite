@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>投诉建议投票区</title>
+	<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+	<style>
+	body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td { margin:0; padding:0; }
+body { background:#fff; color:#555; font-size:14px; font-family: Verdana, Arial, Helvetica, sans-serif; }
+td,th,caption { font-size:14px; }
+h1, h2, h3, h4, h5, h6 { font-weight:normal; font-size:100%; }
+address, caption, cite, code, dfn, em, strong, th, var { font-style:normal; font-weight:normal;}
+a { color:#555; text-decoration:none; }
+a:hover { text-decoration:underline; }
+img { border:none; }
+ol,ul,li { list-style:none; }
+input, textarea, select, button { font:14px Verdana,Helvetica,Arial,sans-serif; }
+table { border-collapse:collapse; }
+html {overflow-y: scroll;} 
+/* css common */
+.clearfix:after {content: "."; display: block; height:0; clear:both; visibility: hidden;}
+.clearfix { *zoom:1; }
+	#wrap{width:1000px;margin:30px auto;}
+	#wrap p{text-align: center;}
+	#ajax{width:800px;margin: 20px auto;}
+	table td{border: 1px solid gray;color:inherit;}
+	#input td{border:0px;} 
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<p><a href="../">返回封面</a></p>
+	<p>截至2015/1/1，被顶次数最多的功能<span style="color:red;font-weight:bolder;">将被实现</span></p>
+	<p>下方可以添加新的项目和留言评论，每个ip每天限顶一次</p>
+	<p>每阶段结束以后会移除被选中功能，并把其他项目被顶次数重置为1/10</p>
+	<!---->
+	<div style="width:800px;margin:10px auto;">
+		<volist name='data' id='vo'>
+			<div style="width:700px;line-height:40px;">
+				<span style='color:black;font-weight:bold;font-size:20px;font-family:Microsoft Yahei;'><{$vo.title}></span>
+				<span style='color:pink;font-style: italic;'><?php echo date('Y-m-d,H:i:s',$vo['lastupdate']); ?></span>
+				<button class='dingaction' title='<{$vo.title}>'>顶(<{$vo.ding}>)</button>
+				<p style="text-align:left;color:#8A2BE2;"><{$vo.describe}></p>
+				
+			</div>
+		</volist>
+	</div>
+	<!---->
+	<div style="width:500px;margin:0px auto;">
+		<table id="input">
+			<tr>
+				<td>你的id</td>
+				<td><input type="text" value="<?php echo $_SESSION['userinfo']['nickname'] ?>">
+				<button class="newfn" style="color:red;">新增项目</button>
+				</td>
+			</tr>
+			<tr>
+				<td style="color:red;" colspan="2" id="zishu"></td>
+			</tr>
+			<tr>
+				<td>你的建议</td>
+				<td><textarea cols="50" rows="10"></textarea></td>
+			</tr>
+			<tr>
+				<td><input type="submit"></td>
+				<td><input type="checkbox" checked >我愿意让服务器接受我的ip </td>
+			</tr>
+		</table>
+	</div>
+	<div id="ajax"></div>
+	</div>
+</body>
+<script>
+
+/*字数*/
+$(function(){
+	$('textarea :eq(0)').keyup(function(){
+		var num=199-($('textarea :eq(0)').val().length);
+		$('#zishu').html("还可以输入"+num+"个字符");
+	})
+/*字数*/
+
+/*投票功能*/
+$('.dingaction').click(function(){
+	var tt=$(this).attr('title');
+	$.post('__ROOT__/index.php/Index/ding',{tt:tt},function(data){
+		if(data=='dingle'){
+			alert('顶成功');
+			location.reload(true);
+		}else if (data=='dingguo'){
+			alert('已经顶过了，明天再来吧');
+		}
+	})
+})
+/*投票功能*/
+
+/*新增选项*/
+	$('.newfn').click(function(){
+		if (confirm('你可以提出新增一个功能，新增的功能将会成为一个新的选项。')) {
+			var title=prompt('功能的名字，五个字以上');
+			var des=prompt('功能的描述，二十字以上');
+			if (des.length<=20) {
+				alert('功能的描述需要在二十字以上');
+				return false;
+			};
+			//正式开始
+			var name=$('input :eq(0)').val();
+			$.post('__ROOT__/index.php/Index/addfn',{title:title,des:des,name:name},function(data){
+				if(data=='f'){
+					alert('对不起增加项目失败了，请联系15001945465');
+				}else{
+					alert('增加项目成功了');
+					location.reload(true);
+
+				}
+			})
+		};
+	})
+/*新增选项*/
+
+	$('input :eq(1)').click(function(){
+			var name=$('input :eq(0)').val();
+			var sug=$('textarea :eq(0)').val();
+			if(name=="" || sug==""){
+				alert('名字和建议都不能是空');
+				return false;
+			}
+			if(sug.length>=200){
+				alert('非常感谢你的热情建议，请控制字数在200以内或者编辑多条');
+				return false;
+			}
+			var ip=document.getElementsByTagName('input')[2].checked;
+			$("#ajax").load('ajax.php',{name:name,sug:sug,ip:ip});
+			$('textarea :eq(0)').val('');
+		})
+		$("#ajax").load('ajax');//开局load
+})
+
+	
+	
+</script>
+</html>

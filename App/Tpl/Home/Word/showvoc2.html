@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+	<style>
+	.red{color: red;}
+	.green{color: green;}
+	.addvoc span{color: #8B2323;font-weight: bold;}
+	.voclist {list-style: none;}
+	.voclist span{width: 174px;display: block;color:#8B0A50;font-weight: bold;font-family: Microsoft Yahei;}
+	</style>
+</head>
+<body>
+	<ul class="voclist">
+		<foreach name="vocs" item="vo">
+    	<li>
+    		<span><{$vo[0]}></span><input type="text" class='write red'><input type="text" value="<{$vo[1]}>" style="width:0;border:0;">
+    	</li>
+ 		</foreach>
+	</ul>
+</body>
+</html>
+<input type="hidden" id='route' value='<{$route}>'>
+<script>
+var route=$('#route').val();
+	$(function(){
+		$('.write').keyup(function(){
+			var writ=$(this).val();
+			var corr=$(this).next().val();
+			if(writ==corr){
+				$(this).removeClass('red');
+				$(this).addClass('green');
+				$(this).attr('disabled','disabled');
+			}
+		})
+	})
+</script>

@@ -1,0 +1,14 @@
+/*这是全局css,前台和后台都可以使用的,命名都以g_为前缀*/
+
+*{margin:0px;padding:0px;list-style:none; font-family:'微软雅黑';}
+a{text-decoration:none;color: inherit;}
+a:hover{color: inherit;}
+
+/*每页的导航外div加上这个类*/
+.g_fenye{ text-align:center; padding:10px;}
+
+.g_menu_dl{border-bottom:solid 1px #dcdcdc;padding-bottom: 15px;}
+.g_menu_dl dt{cursor:pointer;padding-left:15px; color:#DD4B39;margin-top:10px; background:url(../Img/g_jia_icon.png) no-repeat left center;}
+.g_menu_dl dd{margin-top:3px;}
+.g_menu_dl dd a{font-size:14px;padding:4px 0px;padding-left:18px;color:#43434F;display:block; }
+.g_menu_dl dd a:hover{background:#eee;}

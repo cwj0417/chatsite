@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<style>
+	a{text-decoration: none;color: inherit;}
+	.kulist li{font-weight:bolder;border-left:4px solid white;list-style: none;border-bottom: 1px dotted gray;padding: 2px;}
+	.createku{cursor: pointer;color: green;}
+	.dellib{float: right;}
+	.dellib a{color: gray;text-decoration: none;}
+</style>
+<head>
+	<meta charset="UTF-8">
+	<title>背单词</title>
+	<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+<?php 
+//dump($ku);
+?>
+<body>
+	<div style='width:1040px;margin:0px auto;'>
+		<div style="float:left;padding:10px;width:200px;">
+			选择以下单词库<br>也可以<span class="createku">创建一个</span>
+		<ul class="kulist">
+			<?php 
+			foreach ($ku as $v) {
+				if($v['id']==$_SESSION['userinfo']['id']){
+					echo "<li><a target='iframe' href='__ROOT__/index.php/Word/showlist/name/".$v['name']."'>".$v['name']."</a><span class='dellib'><a href='__ROOT__/index.php/Word/dellib/name/".$v['name']."'>删除</a></span></li>";
+				}else{
+					echo"<li><a target='iframe' href='__ROOT__/index.php/Word/showlist2/name/".$v['name']."'>".$v['name']."</a></li>";
+				}
+			}
+			 ?>
+		</ul>
+		</div>
+		<div style="float:left;padding:10px;width:800px;">
+			<div style="width:760px;padding:20px;border:10px dashed orange;border-radius:20px;box-shadow:0 0 4px 4px rgba(120,120,0,0.5);">
+				<iframe name='iframe' frameborder="0" style="width:100%;" id='iframe1'></iframe>
+			</div>
+			<div style="width:760px;padding:20px;border:10px dashed red;border-radius:20px;box-shadow:0 0 4px 4px rgba(120,120,0,0.5);margin-top:30px;">
+				<iframe name='iframe2' frameborder="0" style="width:100%;height:500px;" id='iframe2'></iframe>
+			</div>
+			
+		</div>
+	</div>
+</body>
+<script>
+
+	$(function(){
+
+		///
+		$('.createku').click(function(){
+			var ku=prompt('你要创建的单词库名字');
+			if(ku=='' || ku==null){return false;}
+			$.post('__ROOT__/index.php/Word/createlib',{ku:ku},function(data){
+				if(data=='1'){
+					alert('创建成功了');
+				}else if(data=='2'){
+					alert('登陆以后才能创建单词库');
+				}else{
+				alert('创建错误，可能重名了');
+				}
+				location.reload(true);
+			})
+		})
+		//////
+		$('.dellib').click(function(){
+			if(!confirm('确定要删除库吗，所有单词列表将会被删除')){
+				return false;
+			}
+		})
+		////
+		$('.kulist li').hover(function(){
+			$(this).css('color','gray');
+			$(this).css('border-left','4px solid pink');
+		},function(){
+			$(this).css('color','black');
+			$(this).css('border-left','4px solid white');
+		})
+		////
+
+	})
+	function iframesuit(){ 
+parent.document.all("iframe1").style.height=document.body.scrollHeight; 
+parent.document.all("iframe1").style.width=document.body.scrollWidth; 
+	}
+</script>
+</html>

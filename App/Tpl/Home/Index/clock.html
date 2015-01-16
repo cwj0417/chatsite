@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>文金提示：珍惜时间</title>
+</head>
+
+<body>
+	<input type="hidden" id="root" value="__ROOT__" />
+<div style="width:820px;height:240px;">
+<div style="width:200px;height:84.4px;margin:50px auto;overflow:hidden;">
+
+<script type="text/javascript">
+	
+	var root=$('#root').val();
+	var swfUrl = root+"/Public/clock/clock.swf";
+	var swfTitle = "文金提示：珍惜时间";
+
+// 
+LoadBlogParts();
+
+/******************************************************************************
+			Ȃ
+	o		document.writeɂHTMLo
+******************************************************************************/
+function LoadBlogParts(){
+	var sUrl = swfUrl;
+	
+	var sHtml = "";
+	sHtml += '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="220" height="100" id="' + swfTitle + '" align="middle">';
+	sHtml += '<param name="allowScriptAccess" value="always" />';
+	sHtml += '<param name="movie" value="' + sUrl + '" />';
+	sHtml += '<param name="quality" value="high" />';
+	sHtml += '<param name="bgcolor" value="#ffffff" />';
+	sHtml += '<param name="wmode" value="transparent" />';
+	sHtml += '<embed wmode="transparent" src="' + sUrl + '" quality="high" bgcolor="#ffffff" width="220" height="100" name="' + swfTitle + '" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />';
+	sHtml += '</object>';
+	
+	document.write(sHtml);
+}
+</script>
+</div>
+</div>
+
+</body>
+</html>

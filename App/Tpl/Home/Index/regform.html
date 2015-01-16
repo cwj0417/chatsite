@@ -1,0 +1,33 @@
+<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+<script src="__ROOT__/Public/js/jquery.validate.js"></script>
+<script src="__ROOT__/Public/js/vjs.js"></script>
+<div style="width:840px;height:280px;">
+	<center>
+		<form id="reg" action="<{:U('index.php/Index/reg')}>" method="POST">
+			<br/><br/>
+			用户名&nbsp&nbsp<input type="text" id="username" name='username' class="required username"><br/><br/>
+			昵称&nbsp&nbsp&nbsp&nbsp <input type="text" id="nickname" name="nickname" class="required nickname"><br/><br/>
+			密码&nbsp&nbsp&nbsp&nbsp<input  id="password" type="password" name="password" class="required password"><br/><br/>
+			确认密码<input type="password" name="confirm" class="required confirm"><br/><br/>
+			<input type="submit" value="注册">
+			<input type="hidden" id="root" value="__ROOT__">
+		</form>
+	</center>
+	<style>
+	input.error { border: 3px solid red; }
+label.error {
+  background:url('__ROOT__/Public/img/validate/error.png') no-repeat 0px 0px;
+	background-size: 17px;
+  padding-left: 16px;
+
+  padding-bottom: 2px;
+
+  font-weight: bold;
+
+  color: #ff1493;
+}
+label.checked {
+  background:url('__ROOT__/Public/img/validate/checked.png') no-repeat 0px 0px;
+  background-size: 17px;
+}</style>
+</div>

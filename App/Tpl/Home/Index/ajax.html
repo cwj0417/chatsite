@@ -1,0 +1,56 @@
+<table>
+<tr>
+		
+		<td>好心人id</td>
+		<td>建议内容</td>
+		<td>发送时间</td>
+		<td>发送者ip</td>
+	</tr>
+
+
+<?php 
+$conn=mysql_connect('localhost','root','111111');
+date_default_timezone_set('PRC');
+mysql_query('use sug',$conn);
+mysql_query('set names utf8',$conn);
+
+if(isset($_POST['name'])){
+if($_POST['ip']=='true'){
+	if(isset($_SESSION['userinfo'])){
+	$sql="select exp from user where id='".$_SESSION['userinfo']['id']."';";
+	$res=mysql_fetch_assoc(mysql_query($sql,$conn))['exp'];
+	$res+=1;
+	$sql="update user set exp=".$res." where id=".$_SESSION['userinfo']['id'];
+	
+}
+$sql="insert into sug (name,sug,time,ip)values('".$_POST['name']."','".$_POST['sug']."','".time()."','".$_SERVER['REMOTE_ADDR']."')";
+mysql_query($sql,$conn);
+}
+else{
+$sql2="insert into sug (name,sug,time)values('".$_POST['name']."','".$_POST['sug']."','".time()."')";
+mysql_query($sql2,$conn);
+}
+
+
+}
+
+$res=mysql_query('select*from sug order by id desc',$conn);
+
+while ($row=mysql_fetch_assoc($res)) {
+	if($row['ip']!=null){
+	$ip=explode('.', $row['ip']);
+	}else{$ip=array('***','***','***','***');} ?>
+
+<tr>
+
+	<td>    <?php echo $row['name'];?>    </td>
+	<td style="width:400px;word-break:break-all;">      <?php echo $row['sug']; ?>    </td>
+	<td style="width:160px;">      <?php echo date("Y-m-d,H:i:s",$row['time']);?>    </td>
+	<td style="width:110px;">      <?php echo $ip[0].".***.***.".$ip[3]; ?>    </td>
+</tr>
+
+	<?php
+}
+
+?>
+</table>

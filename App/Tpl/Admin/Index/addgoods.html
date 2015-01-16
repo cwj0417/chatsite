@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+</head>
+<body>
+	<form action="__ROOT__/index.php/Admin/Index/addgoodsaction" method="post" enctype="multipart/form-data">
+		<table>
+			<tr><td>商品名称</td><td><input type="text" name='name'></td></tr>
+			<tr><td>商品种类</td><td><input type="text" name='cat'></td></tr>
+			<tr><td>怒气价格</td><td><input type="text" name='nqprice'></td></tr>
+			<tr><td>金币价格</td><td><input type="text" name='jbprice'></td></tr>
+			<tr><td>怒气现价</td><td><input type="text" name='nqsale'></td></tr>
+			<tr><td>金币现价</td><td><input type="text" name='jbsale'></td></tr>
+			<tr><td>商品图片</td><td><input type="file" name='pic'></td></tr>
+			<tr>
+				<td>商品描述</td>
+				<td>
+					<textarea name="des" style="width:300px;height:200px;resize:none;"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'><input type="submit"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

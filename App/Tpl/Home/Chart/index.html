@@ -1,0 +1,519 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>即时聊天室</title>
+
+</head>
+
+<body>
+
+<!-- 再现列表 -->
+<div class="ollist" style="width:250px;height:500px;position:absolute;left:20px;top:20px;">
+    
+</div>
+<!-- 再现列表 -->
+
+<!-- 用户信息 -->
+<div class="userinfo" style="width:250px;height:150px;position:absolute;left:270px;top:20px;">
+    <a target="_blank" href="<{:U('index.php/Index/info')}>"><div style="width:250px;height:100px;">
+        <div style="width:100px;height:100px;float:left;"><img src="__ROOT__/touxiang/<{$userinfo.id}>" style="width:100px;height:100px;border-radius:50px;"alt="用户头像" id="usertouxiang"/></div>
+        <div class="exp" style="width:150px;height:100px;float:left;"></div>
+    </div>
+    <!-- <div style="width:250px;height:50px;">个性签名：开发中，敬请期待。</div> --></a>
+</div>
+
+<div class="tianqi" style="width:250px;height:600px;position:absolute;left:270px;top:180px;">
+    <p>天气情况（上海）</p>
+    刷新间隔<select name="jiange" id="jiange">
+        <option value="300000">五分钟</option>
+        <option value="600000">十分钟</option>
+        <option value="1800000">三十分钟</option>
+    </select>
+     <button id="refresh">立即刷新</button>
+     <div id="tq" style="width:250px;height:150px;margin-top:5px;box-shadow:0 0 15px rgba(0,152,255,1);">
+         
+     </div>
+     <div class="yubao" style="width:250px;height:350px;">
+    <p></p>
+    <button id="yubaoshuaxin">刷新天气预报</button>
+   <div id="tqyb" style="width:250px;height:320px;margin-top:5px;box-shadow:0 0 5px rgba(0,0,0,.5);"></div>
+
+</div>
+</div>
+
+
+<!-- 用户信息 -->
+
+<div id="dispic" style="z-index:-999;position:absolute;left:20px;top:200px;width:400px;height:400px;overflow:hidden;"></div>
+<div style="width:550px;height:550px;position:absolute; left:500px;" class="liaotian">
+    <div class="tuodong" style="width:550px;height:30px;background:gray;text-align:center;line-height:40px;font-size:28px;color:red;">
+      
+        <div class="suo" style="float:right;width:35px;height:30px;">-</div>
+        <div class="fang" style="float:right;width:35px;height:30px;">+</div>
+    </div>  
+
+        <div class="title"></div>
+        <div id="input">
+        <div id="fontsetting">
+            <select id="size">
+            <?php 
+                for($i=15;$i<30;$i++){
+                    echo "<option value='".$i."'>".$i."</option>";
+                }
+             ?>
+            </select>
+            <select id="bold">
+                <option value="normal">普通</option>
+                <option value="bold">粗</option>
+                <option value="bolder">超粗</option>
+            </select>
+            <select id="color">
+                <option value="red">红</option>
+                <option value="orange">橙</option>
+                <option value="yellow">黄</option>
+                <option value="green">绿</option>
+                <option value="pink">粉</option>
+                <option value="blue">蓝</option>
+                <option value="purple">紫</option>
+                <option value="black">黑</option>
+            </select>
+        </div>
+        <a id="charua"> <form action="<{:U('index.php/Chart/charu')}>" method="POST" enctype="multipart/form-data" id="cha" target="if"> <input type="file" value="插入图片" style="position:absolute; right:0; top:0;font-size:100px; opacity:0; filter:alpha(opacity=0);" id="charu" name="img" /></form></a>
+      
+        <button id="ltjl" style="display:inline;width:120px;height:23px;font-size:18px;">聊天记录</button>
+        <button class="qp" style="display:inline;width:120px;height:23px;font-size:18px;">清屏</button>
+        <textarea  id="chartcontent" cols="20" rows="10"  style="max-width:550px;width:550px;max-height:120px;"></textarea><br/>
+        <p id="zishu" style="color:red;"></p>
+    </div>
+</div>
+
+
+    <input type="hidden" id="root" value='__ROOT__' />
+    <input type="hidden" id="nickname" value=" <?php echo $_SESSION['userinfo']['nickname'] ?> "/>
+    <input type="hidden" id="id" value=" <?php echo $_SESSION['userinfo']['id'] ?> "/>
+<div>
+       <a onclick="liaotianshi(1);">聊天室1</a>
+       <a onclick="liaotianshi(2);">聊天室2</a>
+       <a onclick="liaotianshi(3);">聊天室3</a>
+       <a id="leave"href="__ROOT__/index.php">回到主页</a>
+   </div>
+
+<!-- 登陆框和遮罩层 -->
+
+<div style="width:300px;height:180px;position:absolute;left:300px;top:150px;z-index:1000;background:pink;display:none;" id="denglu">
+    <center>
+        <form action="<{:U('index.php/Index/chartlog')}>" method="post">
+            <br/><br/>
+            没有账号？去<a href="__ROOT__/index.php">注册</a><br/><br/>
+            用户名&nbsp&nbsp<input type="text" name='username'><br/><br/>
+            密码&nbsp&nbsp&nbsp&nbsp<input type="password" name="pwd"><br/><br/>
+            
+            <input type="submit" value="登陆">
+        </form>
+    </center>
+</div>
+
+
+<!-- 登陆框和遮罩层 -->
+
+<iframe name="if" frameborder="0"></iframe>
+
+ <script type="text/javascript">
+
+var jiange=300000;
+var tq=null;
+
+tq=setInterval("tianqi()",jiange);
+
+function yubao(){
+    $.get('http://api.36wu.com/Weather/GetMoreWeather?district=%E4%B8%8A%E6%B5%B7',function(data){
+        var b=data.data;
+        $('#tqyb').empty();
+        if(data.status=='301'){$('#tqyb').append($('<p>对不起</p><p>你在这一小时已经查看了20次天气预报</p><p>别太心急</p><p>请您过一会再来看天气吧</p>'));return;}
+        $('#tqyb').append($('<hr/><p>'+b.date_2+'  '+b.weather_2+'</p><p>'+b.temp_2+'  '+b.wind_2+'</p><hr/><p>'+b.date_3+'  '+b.weather_3+'</p><p>'+b.temp_3+'  '+b.wind_3+'</p><hr/><p>'+b.date_4+'  '+b.weather_4+'</p><p>'+b.temp_4+'  '+b.wind_4+'</p><hr/><p>天气建议：</p><p>'+b.index_d+'</p>'));
+    });
+}
+
+function tianqi(){
+    $.get('http://api.36wu.com/Weather/GetWeather?district=%E4%B8%8A%E6%B5%B7',function(data){
+        var a=data.data;
+        $('#tq').empty();
+        if(data.status=='301'){$('#tq').append($('<p>真的是SAD</p><p>你在这一小时已经看了20次天气</p><p>你晚饭吃饱了吧？</p><p>请您过一会再来看天气吧</p>'));return;}
+        $('#tq').append($('<p>更新时间:'+a.dateTime+a.refreshTime+'</p><p>天气:'+a.weather+'</p><p>现在温度:'+a.temp+'</p><p>今天温度:'+a.minTemp+'~'+a.maxTemp+'</p>'));
+    });
+}
+
+$(function(){
+    tianqi();
+    yubao();
+
+    $('#yubaoshuaxin').click(function(){yubao();})
+
+    $('#refresh').click(function(){tianqi();})
+
+    $('#jiange').change(function(){
+        jiange=$(this).val();
+        clearInterval(tq);
+        tq=setInterval("tianqi()",jiange);
+    })
+
+})
+
+var root=$('#root').val();
+
+window.onunload=function(){
+    $.ajax({url:root+"/index.php/Chart/leave",async:false});
+}
+
+$(function(){
+    getinfo();
+    setInterval('chatexp()',60000);
+    setInterval('getinfo()',60000);
+})
+
+function chatexp(){
+    $.get(root+'/index.php/Chart/chatexp');
+}
+
+function getinfo(){
+    $('.exp').load(root+'/index.php/Chart/getinfo');
+}
+
+$(function(){
+    $('.ollist').load(root+"/index.php/Chart/getollist");
+    setInterval("$('.ollist').load(root+'/index.php/Chart/getollist')",10000);
+    $('#leave').click(function(e){
+
+        $.ajax({url:root+"/index.php/Chart/leave",async:false});
+
+    })
+})
+
+/* ↑ 在线用户*/
+
+
+$(function(){
+    $('#ltjl').click(function(){
+        if($('#jldiv').length>0){
+            $('#jldiv').remove();
+            return;
+        }
+        $('<div></div>').attr('id','jldiv').css('width','400px').css('height','650px').css('position','absolute').css('top','0px').css('background','pink').css('overflow','scroll').appendTo($('body'));
+
+        var  tiaoshu=prompt('要查看几条记录？按取消查看全部','50');
+        if(tiaoshu==null){
+        $.post('ltjl',{number:"chart"+room},function(data){
+            $('#jldiv').html(data);
+        })
+        }else{
+             $.post('ltjls',{number:"chart"+room,much:tiaoshu},function(data){
+            $('#jldiv').html(data);
+        })
+        }
+
+
+        $("#jldiv").scrollTop($("#jldiv")[0].scrollHeight);
+        $("#jldiv").mousedown(function(e)//e鼠标事件  
+            {     
+                var offset = $(this).offset();//DIV在页面的位置  
+                var x = e.pageX - offset.left;//获得鼠标指针离DIV元素左边界的距离  
+                var y = e.pageY - offset.top;//获得鼠标指针离DIV元素上边界的距离  
+                $(document).bind("mousemove",function(ev)//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件  
+                {  
+                    $("#jldiv").stop();//加上这个之后  
+                      
+                    var _x = ev.pageX - x;//获得X轴方向移动的值  
+                    var _y = ev.pageY - y;//获得Y轴方向移动的值  
+                    $('#jldiv').css('left',_x).css('top',_y);
+                });  
+                  
+            }); 
+    })
+})
+
+/*↑聊天记录*/
+
+ $(function(){
+    $('.suo').click(function(){
+ 
+        $('#input').slideUp('slow');
+        $('.title').slideUp('slow');
+        $('.liaotian').animate({left:0,top:$(window).height()-50},1000);
+        $('.tuodong').animate({width:250},1000);
+    })
+    $('.fang').click(function(){
+        $('.title').slideDown('slow');
+        $('#input').slideDown('slow');
+        $('.liaotian').animate({left:500,top:0},1000);
+        $('.tuodong').animate({width:550},1000);
+    })
+ })
+
+$(".tuodong").mousedown(function(e)//e鼠标事件  
+            {     
+                var offset = $(this).offset();//DIV在页面的位置  
+                var x = e.pageX - offset.left;//获得鼠标指针离DIV元素左边界的距离  
+                var y = e.pageY - offset.top;//获得鼠标指针离DIV元素上边界的距离  
+                $(document).bind("mousemove",function(ev)//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件  
+                {  
+                    $(".tuodong").stop();//加上这个之后  
+                      
+                    var _x = ev.pageX - x;//获得X轴方向移动的值  
+                    var _y = ev.pageY - y;//获得Y轴方向移动的值  
+                      
+                   // $(".liaotian").animate({left:_x+"px",top:_y+"px"},10);  
+                    $('.liaotian').css('left',_x).css('top',_y);
+                });  
+                  
+            });
+              
+            $(document).mouseup(function()  
+            {  
+               
+                $(this).unbind("mousemove");  
+            }) 
+
+var unread=0;
+var breaktime=0;
+var root=$('#root').val();
+var nickname=$('#nickname').val();
+
+$(function(){
+    $('#size').val(<{$userinfo.size}>);
+    $('#bold').val('<{$userinfo.bold}>');
+    $('#color').val('<{$userinfo.color}>');
+})
+
+$(function(){
+    $('#chartcontent').keydown(function(ev){
+        var zishu=$(this).val().length;
+        $('#zishu').html("这句话还能打"+(200-zishu)+'个字<br/>必须至少'+zishu+"/2个字");
+        var color=$('#color').val();
+        var size=$('#size').val();
+        var bold=$('#bold').val();
+        $(this).css('color',color).css('font-size',size+"px").css('font-weight',bold);
+
+        if(ev.which==13){
+            /*if($(this).val().length<2){$(this).val('');}
+            if($(this).val().length<3 || $(this).val().length>200){
+                var s=$(this).val();
+                s=s.substr(0,1);
+                $(this).val(s);
+                return false;}*/
+            if(breaktime==1){alert('说话别太急小心呛着空气了');return false;}
+            var color=$('#color').val();
+            var size=$('#size').val();
+            var bold=$('#bold').val();
+            $.get(root+'/index.php/Chart/checkol');
+            $.post(root+"/index.php/Chart/fasong",{content:$(this).val(),nickname:nickname,number:"chart"+room,color:color,bold:bold,size:size});
+            $(this).val('');
+            $('#zishu').html('');
+            $("title").html("即时聊天室");
+            breaktime=1;
+            setTimeout("breaktime=0",2000);
+            unread=0;
+            return false;
+        }
+    })
+})
+
+$(function(){
+    $('#fontsetting').change(function(){
+        var color=$('#color').val();
+        var size=$('#size').val();
+        var bold=$('#bold').val();
+        $('#chartcontent').css('color',color).css('font-size',size+"px").css('font-weight',bold);
+         $.post(root+"/index.php/Chart/fontsetting",{id:'<{$userinfo.id}>',color:color,bold:bold,size:size});
+    })
+})
+
+var cur=0;
+var room=0;
+var clock;
+
+function liaotianshi(num){
+    var root=$('#root').val();
+
+$.get(root+'/index.php/Chart/checkol');
+            room=num;
+$.post(root+'/index.php/Chart/room',{room:'聊天室'+room});
+            $('.tuodong').html('聊天室'+num+'<div class="suo" style="float:right;width:35px;height:35px;">-</div><div class="fang" style="float:right;width:35px;height:35px;">+</div>');
+$('.suo').click(function(){
+
+$('#input').slideUp('slow');
+$('.title').slideUp('slow');
+$('.liaotian').animate({left:0,top:$(window).height()-50},1000);
+$('.tuodong').animate({width:250},1000);
+})
+$('.fang').click(function(){
+$('.title').slideDown('slow');
+$('#input').slideDown('slow');
+$('.liaotian').animate({left:500,top:0},1000);
+$('.tuodong').animate({width:550},1000);
+})
+            $('.title').html('');
+            $('<p>正在加载聊天室内容</p>').appendTo($('title'));
+            //clearInterval(clock);
+            $.post(root+"/index.php/Chart/getcontent",{number:"chart"+num},function(data){
+                cur=data[0].id;
+               
+                for(i=data.length-1;i>-1;i--){
+                    var name=$("<p>"+data[i].nickname+data[i].time+"</p>");
+                    var content=$("<p>"+data[i].content+"</p>").css('color',data[i].color).css('font-size',data[i].size+"px").css('font-weight',data[i].bold);
+                    name.appendTo($('.title'));
+                    content.appendTo($('.title'));
+                    $('<p style="height:8px;"></p>').appendTo($('.title'));
+                }
+                $(".title").scrollTop($(".title")[0].scrollHeight);
+                $('.title img').hover(function(){
+                        $('<img/>').attr('id','big').css('position','absolute').attr('src',$(this).attr('src')).appendTo($('#dispic'));
+                    },function(){
+                        $('#dispic').html('');
+                    })
+
+                    $('.title img').mousemove(function(e){
+                        var x=e.offsetX;
+                        var y=e.offsetY;
+                        var xiaox=parseInt($(this).css('width'));
+                        var xiaoy=parseInt($(this).css('height'));
+                        var dax=parseInt($('#big').css('width'));
+                        var day=parseInt($('#big').css('height'));
+                        var finalx=dax*x/xiaox-200;
+                        var finaly=day*y/xiaoy-200;
+                        $('#big').css('left',-finalx).css('top',-finaly);
+                          })
+            },'json');
+            
+           // clock=setInterval("ai();",1000);
+           
+           setTimeout('ai();',1000);
+
+        }
+
+function ai(){
+                var ajax=room;
+                $.ajax({
+                url:$('#root').val()+'/lun.php',
+                dataType:'json',
+                type:'POST',
+                data:{current:cur,number:"chart"+room},
+                success:function(data){
+                    if(ajax!=room){return;}
+                    $("title").html("你有"+unread+"条新消息");
+                    unread++;
+                    cur++;  
+                    
+                    var name=$("<p>"+data.nickname+data.time+"</p>");
+                    var content=$("<p>"+data.content+"</p>").css('color',data.color).css('font-size',data.size+"px").css('font-weight',data.bold);
+                    name.appendTo($('.title'));
+                    content.appendTo($('.title'));
+                    $('<p style="height:8px;"></p>').appendTo($('.title'));
+                    $(".title").scrollTop($(".title")[0].scrollHeight);
+                    $('.title img').unbind();
+                    $('.title img').hover(function(){
+                        $('<img/>').attr('id','big').css('position','absolute').attr('src',$(this).attr('src')).appendTo($('#dispic'));
+                    },function(){
+                        $('#dispic').html('');
+                    })
+
+                    $('.title img').mousemove(function(e){
+                        var x=e.offsetX;
+                        var y=e.offsetY;
+                        var xiaox=parseInt($(this).css('width'));
+                        var xiaoy=parseInt($(this).css('height'));
+                        var dax=parseInt($('#big').css('width'));
+                        var day=parseInt($('#big').css('height'));
+                        var finalx=dax*x/xiaox-200;
+                        var finaly=day*y/xiaoy-200;
+                        $('#big').css('left',-finalx).css('top',-finaly);
+                     })
+                
+                  ai();
+                }
+            });}
+
+
+function denglu(){
+            alert('本聊天室只向会员开放，登录后马上开始聊天吧~');
+            $("<div id='zhezhao'></div>").appendTo($('body')).fadeIn('slow');
+            $('#denglu').fadeIn('slow');
+        }
+
+        /*插入图片*/
+$(function(){
+            $('#charu').change(function(){
+               // document.getElementById('cha').submit();
+                var img=document.getElementById('charu').files[0];
+        
+                fd=new FormData();
+                fd.append('img',img);
+        
+                xhr=new XMLHttpRequest();
+        
+                xhr.open('post',root+'/index.php/Chart/charu');
+                xhr.send(fd);
+                xhr.onreadystatechange=function(){
+                    if(this.readyState==4){
+                        //$('#tupianlujin').html("图片路径是&nbsp&nbsp"+xhr.responseText);
+                        $('#chartcontent').val($('#chartcontent').val()+xhr.responseText);
+                        
+                    }
+                }
+            })
+            
+        })
+        /*插入图片*/
+    $(function(){//清屏
+        $('.qp').click(function(){
+            /*if($('.title').html()==''){
+                alert('已经清过了-v-')；
+                return false;
+            }*/
+            $('.title').html('');
+        })
+    })//清屏
+ </script>
+
+
+<!-- 开局判断是否登录 -->
+<?php 
+if(isset($_SESSION['userinfo'])){
+    echo "<script>alert('".$_SESSION['userinfo']['nickname']."欢迎你来聊天，请选择聊天室');
+    $.get(root+'/index.php/Chart/checkol');</script>";
+}else{
+    echo "<script>denglu();</script>";
+}
+ ?>
+<!-- 开局判断是否登录 -->
+
+</body>
+<style>
+    @charset "utf-8";
+/* accordion */
+#tq p,#tqyb p{line-height: 30px;font-family: Microsoft YaHei;}
+#jldiv img{width:200px;}
+#zhezhao{
+    margin:0;padding:0;border:none;width:100%;height:100%;background:#333;opacity:0.6;z-index:999;position:fixed;top:0;left:0;
+}
+
+*{margin:0;padding:0;}
+body{font-family:Arial;background:#fff url(__ROOT__/Public/img/chart/pattern.png) repeat top left;}
+a{color:#444;}
+a:hover{color:#999;text-decoration: none;}
+a{text-decoration: none;}
+.title{width:550px;height:350px;overflow:auto;background:white;border:1px solid rgba(0,0,0,0.8);box-shadow: 0 0 4px rgba(0,0,0,0.3); }
+.title img{width:100px;}
+#input{width:550px;height:120px;}
+a.back{background:transparent url(__ROOT__/Public/img/chart/back.png) no-repeat top left;position:fixed;width:150px;height:27px;outline:none;bottom:0px;left:0px;}
+#content{margin:0 auto;}
+.reference{clear:both;top:300px;left:0px;position:absolute;text-align:right;width:400px;padding:20px;background-color:#fff;-moz-box-shadow:1px 3px 15px #ddd;-webkit-box-shadow:1px 3px 15px #ddd;box-shadow:1px 3px 15px #ddd;}
+.reference p a{text-transform:uppercase;text-shadow:1px 1px 1px #fff;color:#666;text-decoration:none;font-size:10px;}
+.reference p a:hover{color:#333;}
+#charua{display:inline-block; width:30px; height:30px; background:url('__ROOT__/Public/img/chart/pic.jpg')no-repeat ; background-size: 30px; position:relative; overflow:hidden;}
+#charua:hover{{background:green;}
+
+</style>
+
+</html>
